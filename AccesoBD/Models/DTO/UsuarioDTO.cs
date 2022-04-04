@@ -16,7 +16,7 @@ namespace AccesoBD.Models.DTO
         [EmailAddress]
         public string Correo { get; set; } = null!;
 
-        [StringLength(50, MinimumLength = 10)]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "La contraseña debe tener una longitud minima de {2} y máximo de {1}")]
         public string Clave { get; set; } = null!;
     }
 }

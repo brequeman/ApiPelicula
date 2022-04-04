@@ -6,7 +6,12 @@ namespace Logica
 {
     public class CategoriaManager
     {
-        private bd_cinemaContext _context = new bd_cinemaContext();
+        private bd_cinemaContext _context;
+
+        public CategoriaManager(bd_cinemaContext dbcontext)
+        {
+            _context = dbcontext;
+        }
 
         public List<CategoriaDTO> Listar()
         {

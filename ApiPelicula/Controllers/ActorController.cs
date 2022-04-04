@@ -1,16 +1,22 @@
-﻿using AccesoBD.Models.BD;
+﻿using AccesoBD.Models.BDContext;
 using AccesoBD.Models.DTO;
 using Logica;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPelicula.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ActorController : ControllerBase
     {
-        private ActorManager _actorManager = new ActorManager();
+        private ActorManager _actorManager;
+
+        public ActorController(bd_cinemaContext context)
+        {
+            _actorManager = new ActorManager(context);
+        }
 
         [HttpGet]
         public List<ActorDTO> ListarActor()

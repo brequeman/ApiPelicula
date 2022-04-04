@@ -1,6 +1,9 @@
-﻿using AccesoBD.Models.DTO;
+﻿using AccesoBD.Models.BDContext;
+using AccesoBD.Models.DTO;
 using Logica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace ApiPelicula.Controllers
 {
@@ -8,18 +11,28 @@ namespace ApiPelicula.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private UsuarioManager _usuarioManager = new UsuarioManager();
+        private UsuarioManager _usuarioManager;
+
+        public UsuarioController(bd_cinemaContext context)
+        {
+            _usuarioManager = new UsuarioManager(context);
+        }
 
         [HttpPost]
-        public string RegistrarPelicula(UsuarioDTO usuario)
+        public ActionResult<string> RegistrarUsuario(UsuarioDTO usuario)
         {
-            int respuesta = _usuarioManager.Crear(usuario);
+            string respuesta = _usuarioManager.Crear(usuario);
 
-            if(respuesta == -1) {
-                return "El correo ya se encuetra registrado";
+            if (Regex.IsMatch(respuesta, @"^[0-9]+$"))
+            {
+                return Ok("Usuario registrado");
+            }
+            else
+            {
+                return BadRequest(respuesta);
             }
 
-            return "Ok - Usuario registrado";
+            
         }
     }
 }

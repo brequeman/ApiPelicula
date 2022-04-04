@@ -11,8 +11,12 @@ namespace Logica
 {
     public class DirectorManager
     {
-        private bd_cinemaContext _context = new bd_cinemaContext();
+        private bd_cinemaContext _context;
 
+        public DirectorManager(bd_cinemaContext dbcontext)
+        {
+            _context = dbcontext;
+        }
         public List<DirectorDTO> Listar()
         {
             try

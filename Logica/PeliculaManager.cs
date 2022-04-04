@@ -12,7 +12,12 @@ namespace Logica
 {
     public class PeliculaManager
     {
-        private bd_cinemaContext _context = new bd_cinemaContext();
+        private bd_cinemaContext _context;
+
+        public PeliculaManager(bd_cinemaContext dbcontext)
+        {
+            _context = dbcontext;
+        }
 
         public List<PeliculaDTO> Listar()
         {
