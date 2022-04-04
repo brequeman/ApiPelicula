@@ -1,5 +1,6 @@
 ﻿using AccesoBD.Models.BD;
 using AccesoBD.Models.BDContext;
+using AccesoBD.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,23 @@ namespace Logica
     {
         private bd_cinemaContext _context = new bd_cinemaContext();
 
-        public List<Usuario> Listar()
+        public UsuarioDTO ObtenerUsuario(string correo, string clave)
         {
             try
             {
-                List<Usuario> lista = new List<Usuario>();
-                lista = _context.Usuarios.ToList();
+                UsuarioDTO usuarioDTO = new UsuarioDTO();
 
-                return lista;
+                Usuario? usuarioExiste = _context.Usuarios.Where(u => u.Correo == correo && u.Clave == clave).FirstOrDefault();
+
+                if (usuarioExiste != null)
+                {
+                    usuarioDTO.Clave = usuarioExiste.Clave;
+                    usuarioDTO.Correo = usuarioExiste.Correo;
+                    usuarioDTO.Id = usuarioExiste.Id;
+                    usuarioDTO.Nombre = usuarioExiste.Nombre;
+                }
+
+                return usuarioDTO;
             }
             catch (Exception ex)
             {
@@ -28,31 +38,23 @@ namespace Logica
 
         }
 
-        public int Crear(Usuario usuario)
+        public int Crear(UsuarioDTO usuarioDTO)
         {
+            if(_context.Usuarios.Where(u => u.Correo == usuarioDTO.Correo).Any())
+            {
+                return -1;
+            }
+
+            Usuario usuario = new Usuario();
+            usuario.Nombre = usuarioDTO.Nombre;
+            usuario.Correo = usuarioDTO.Correo;
+            usuario.Clave = usuarioDTO.Clave;
+
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
             return usuario.Id;
         }
 
-        public void Editar(Usuario usuario)
-        {
-            var objectoEncontrado = _context.Usuarios.Find(usuario.Id);
-            if (objectoEncontrado != null)
-            {
-                objectoEncontrado.Nombre = usuario.Nombre;
-                _context.SaveChanges();
-            }
-        }
-        public void Eliminar(int id)
-        {
-            var objetoEncontrado = _context.Usuarios.Find(id);
-            if (objetoEncontrado != null)
-            {
-                _context.Usuarios.Remove(objetoEncontrado);
-                _context.SaveChanges();
-            }
-        }
 
     }
 }
